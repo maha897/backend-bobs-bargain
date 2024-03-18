@@ -54,6 +54,10 @@ public class AuthController {
         user.setPhone(signupRequest.getPhone());
         user.setPassword(encoder.encode(signupRequest.getPassword()));
 
+        if (user.isNotValid()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Error: Missing fields"));
+        }
+
         userService.saveUser(user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Success: User created"));

@@ -44,4 +44,8 @@ public class User {
     private ZonedDateTime createdAt;
     @UpdateTimestamp
     private ZonedDateTime updatedAt;
+
+    public boolean isNotValid() {
+        return email == null || firstName == null || lastName == null || phone == null || password == null;
+    }
 }
