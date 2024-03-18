@@ -10,7 +10,6 @@ So I can access all the functionalities,
 I want to be able to sign up an account
 ```
 
-
 ```
 As a user,
 So I can customize my account
@@ -41,10 +40,6 @@ I want be able to browse by category
 As a user,
 So I can learn more about a product,
 I want be able to click on a listing to see it description, images and map
-```
-
-```
-more?
 ```
 
 
