@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<MessageResponse> registerUser(@RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
         if (userService.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Error: Email is already in use"));
         }
@@ -54,12 +54,12 @@ public class AuthController {
         user.setPhone(signupRequest.getPhone());
         user.setPassword(encoder.encode(signupRequest.getPassword()));
 
-        if (user.isNotValid()) {
+        if (user.notValid()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Error: Missing fields"));
         }
 
-        userService.saveUser(user);
+        user = userService.saveUser(user);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Success: User created"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 }
