@@ -15,6 +15,10 @@ spring:
     hikari:
       maximum-pool-size: 3
 
+jwt:
+  secret: <SECRET>
+  expiration: 3600000 # ms
+
 server:
   port: 4000
   error:
