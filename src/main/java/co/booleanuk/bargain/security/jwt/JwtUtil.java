@@ -54,7 +54,7 @@ public class JwtUtil {
 
     public Boolean validateToken(String token) {
         try {
-            Jwts.parser().build().parse(token);
+            Jwts.parser().verifyWith(key()).build().parse(token);
             return true;
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token: {}", e.getMessage());
