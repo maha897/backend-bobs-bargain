@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("listings")
 @AllArgsConstructor
