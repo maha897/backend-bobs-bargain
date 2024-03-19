@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("listing")
+@RequestMapping("listings")
 @AllArgsConstructor
 public class ListingController {
     private final ListingService listingService;

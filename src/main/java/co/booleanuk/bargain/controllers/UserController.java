@@ -14,16 +14,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("user")
+@RequestMapping("users")
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
     private final PasswordEncoder encoder;
+
+    @GetMapping
+    public ResponseEntity<List<User>> get() {
+        return ResponseEntity.ok(userService.getAll());
+    }
 
     @GetMapping("{id}")
     public ResponseEntity<User> getById(@PathVariable UUID id) {
