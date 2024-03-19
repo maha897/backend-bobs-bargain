@@ -1,0 +1,23 @@
+services:
+  app:
+    image: 'backend-bobs-bargain:latest'
+    container_name: app
+    depends_on:
+      - db
+    ports:
+      - '4000:4000'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://cornelius.db.elephantsql.com:5432/uwbdqbmd
+      - SPRING_DATASOURCE_USERNAME=uwbdqbmd
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD} #Password in local secret.env file
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - JWT_SECRET=${JWT_SECRET} #Password in local secret.env file
+      - JWT_EXPIRATION=3600000
+
+  db:
+    image: 'postgres:latest'
+    container_name: db
+    environment:
+      - POSTGRES_USER=uwbdqbmd
+      - POSTGRES_DATABASE=uwbdqbmd
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD} #Password in local secret.env file

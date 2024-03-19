@@ -5,10 +5,10 @@ plugins {
 }
 
 group = 'co.boolean'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2-docker'
 
 java {
-	sourceCompatibility = '21'
+	sourceCompatibility = '17'
 }
 
 configurations {
@@ -43,4 +43,14 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes 'Main-Class': 'co.booleanuk.api.Application'
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
