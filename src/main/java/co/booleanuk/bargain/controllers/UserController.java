@@ -26,13 +26,13 @@ public class UserController {
     private final PasswordEncoder encoder;
 
     @GetMapping("{id}")
-    public ResponseEntity<User> getUser(@PathVariable UUID id) {
+    public ResponseEntity<User> getById(@PathVariable UUID id) {
         Optional<User> user = this.userService.getUserById(id);
         return user.map(value -> ResponseEntity.status(HttpStatus.OK).body(value)).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody User user) {
+    public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserEmail = authentication.getName();
 
@@ -42,7 +42,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         if (!currentUserEmail.equals(userToUpdateOptional.get().getEmail())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Error: You are not authorized to update this user"));
         }
 
         User userToUpdate = userToUpdateOptional.get();
@@ -70,7 +70,7 @@ public class UserController {
         }
         User userToDelete = userToDeleteOptional.get();
         if (!currentUserEmail.equals(userToDelete.getEmail())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Error: You are not authorized to delete this user"));
         }
 
         try {
