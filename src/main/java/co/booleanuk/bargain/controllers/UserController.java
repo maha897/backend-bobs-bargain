@@ -45,8 +45,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Error: You are not authorized to update this user"));
         }
 
+        // Updating the user fields with new values
         User userToUpdate = userToUpdateOptional.get();
-
         userToUpdate.setEmail(user.getEmail() != null ? user.getEmail() : userToUpdate.getEmail());
         userToUpdate.setFirstName(user.getFirstName() != null ? user.getFirstName() : userToUpdate.getFirstName());
         userToUpdate.setLastName(user.getLastName() != null ? user.getLastName() : userToUpdate.getLastName());

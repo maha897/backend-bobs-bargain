@@ -40,6 +40,7 @@ public class ListingController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Error: Missing fields"));
         }
 
+        // Setting the user and other properties for the listing
         listing.setUser(userOptional.get());
         listing.setSold(false);
         for (Image image : listing.getImages()) {
@@ -86,10 +87,12 @@ public class ListingController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         Listing listingToUpdate = listingOptional.get();
+        // Checking if the authenticated user is the owner of the listing
         if (!userEmail.equals(listingToUpdate.getUser().getEmail())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Error: You are not authorized to update this listing"));
         }
 
+        // Updating the listing fields with new values
         listingToUpdate.setTitle(listing.getTitle() != null ? listing.getTitle() : listingToUpdate.getTitle());
         listingToUpdate.setDescription(listing.getDescription() != null ? listing.getDescription() : listingToUpdate.getDescription());
         listingToUpdate.setSold(listing.getSold() != null ? listing.getSold() : listingToUpdate.getSold());
@@ -106,6 +109,7 @@ public class ListingController {
         }
         listingToUpdate.setUpdatedAt(ZonedDateTime.now());
 
+        // Saving the updated listing and returning the response
         return ResponseEntity.status(HttpStatus.CREATED).body(listingService.saveListing(listingToUpdate));
     }
 
@@ -123,6 +127,7 @@ public class ListingController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
+        // Deleting the listing and handling any exceptions
         try {
             this.listingService.deleteListing(listingToDelete);
         } catch (DataIntegrityViolationException e) {

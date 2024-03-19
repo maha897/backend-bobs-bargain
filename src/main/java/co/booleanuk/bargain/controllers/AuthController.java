@@ -36,22 +36,27 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        // Generating JWT token for the authenticated user
         String jwt = jwtUtil.generateToken(userDetails);
 
+        // Returning the JWT token along with user details in the response
         return ResponseEntity.ok(new TokenResponse(jwt, userDetails.getId(), userDetails.getUsername()));
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
+        // Checking if the email is already in use
         if (userService.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Error: Email is already in use"));
         }
 
+        // Creating a new User object and setting its properties from the signup request
         User user = new User();
         user.setEmail(signupRequest.getEmail());
         user.setFirstName(signupRequest.getFirstName());
         user.setLastName(signupRequest.getLastName());
         user.setPhone(signupRequest.getPhone());
+        // Encoding the password before storing it
         user.setPassword(encoder.encode(signupRequest.getPassword()));
 
         if (user.notValid()) {
@@ -60,6 +65,7 @@ public class AuthController {
 
         user = userService.saveUser(user);
 
+        // Returning the saved user details in the response
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 }
