@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -44,8 +45,12 @@ public class User {
     private ZonedDateTime createdAt;
     @UpdateTimestamp
     private ZonedDateTime updatedAt;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @ToString.Exclude
+    private List<Listing> listings;
 
-    public boolean isNotValid() {
+    public boolean notValid() {
         return email == null || firstName == null || lastName == null || phone == null || password == null;
     }
 }

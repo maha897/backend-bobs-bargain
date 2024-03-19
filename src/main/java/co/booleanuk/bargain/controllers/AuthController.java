@@ -36,30 +36,36 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        // Generating JWT token for the authenticated user
         String jwt = jwtUtil.generateToken(userDetails);
 
+        // Returning the JWT token along with user details in the response
         return ResponseEntity.ok(new TokenResponse(jwt, userDetails.getId(), userDetails.getUsername()));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<MessageResponse> registerUser(@RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
+        // Checking if the email is already in use
         if (userService.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Error: Email is already in use"));
         }
 
+        // Creating a new User object and setting its properties from the signup request
         User user = new User();
         user.setEmail(signupRequest.getEmail());
         user.setFirstName(signupRequest.getFirstName());
         user.setLastName(signupRequest.getLastName());
         user.setPhone(signupRequest.getPhone());
+        // Encoding the password before storing it
         user.setPassword(encoder.encode(signupRequest.getPassword()));
 
-        if (user.isNotValid()) {
+        if (user.notValid()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Error: Missing fields"));
         }
 
-        userService.saveUser(user);
+        user = userService.saveUser(user);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Success: User created"));
+        // Returning the saved user details in the response
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 }
